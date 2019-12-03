@@ -1,0 +1,883 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/rng.png">
+  <link rel="icon" type="image/png" href="/img/rng.png">
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  <meta name="description" content="">
+  <meta name="author" content="PZI">
+  <meta name="keywords" content="">
+  <title>CMMI访谈笔记 ~ Rng</title>
+
+  <link rel="stylesheet" href="/lib/font-awesome/css/all.min.css"  >
+<link rel="stylesheet" href="/lib/bootstrap/css/bootstrap.min.css"  >
+<link rel="stylesheet" href="/lib/mdbootstrap/css/mdb.min.css"  >
+<link rel="stylesheet" href="/lib/github-markdown/github-markdown.min.css"  >
+<link rel="stylesheet" href="https://at.alicdn.com/t/font_1067060_qzomjdt8bmp.css">
+
+
+  <link rel="stylesheet" href="/lib/prettify/tomorrow-night-eighties.min.css"  >
+
+<link rel="stylesheet" href="/css/main.css"  >
+
+
+  <link rel="stylesheet" href="/lib/fancybox/jquery.fancybox.min.css"  >
+
+
+  
+
+
+
+</head>
+
+
+<body>
+  <header style="height: 50vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand"
+       href="/">&nbsp;<strong>qy</strong>&nbsp;</a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          <li class="nav-item">
+            <a class="nav-link" href="/">主页</a>
+          </li>
+        
+          
+          
+          <li class="nav-item">
+            <a class="nav-link" href="/archives/">文章</a>
+          </li>
+        
+          
+          
+          <li class="nav-item">
+            <a class="nav-link" href="/categories/">分类</a>
+          </li>
+        
+          
+          
+          <li class="nav-item">
+            <a class="nav-link" href="/about/">关于</a>
+          </li>
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" data-toggle="modal" data-target="#modalSearch">&nbsp;&nbsp;<i
+                class="iconfont icon-search"></i>&nbsp;&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+
+</nav>
+
+    <div class="view intro-2" id="background"
+         style="background: url('/img/dl.png')no-repeat center center;
+           background-size: cover;
+           background-attachment: fixed;">
+      <div class="full-bg-img">
+        <div class="mask rgba-black-light flex-center">
+          <div class="container text-center white-text fadeInUp">
+            <span class="h2" id="subtitle">
+              
+
+              
+            </span>
+
+            
+              <br>
+              <p class="mt-3">星期四, 十月 10日 2019, 10:00 上午</p>
+            
+          </div>
+
+          
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid">
+  <div class="row">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-md">
+      <div class="py-5 z-depth-3" id="board">
+        <div class="post-content mx-auto" id="post">
+          <div class="markdown-body">
+            <h1 id="CMMI-访谈笔记"><a href="#CMMI-访谈笔记" class="headerlink" title="CMMI 访谈笔记"></a>CMMI 访谈笔记</h1><h2 id="TS（设计开发人员）-问题"><a href="#TS（设计开发人员）-问题" class="headerlink" title="TS（设计开发人员） 问题"></a>TS（设计开发人员） 问题</h2><table>
+<thead>
+<tr>
+<th>目标</th>
+<th>实践</th>
+<th>问题翻译</th>
+<th>回答要点</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>SG1：选择产品组件解决方案：从备选方案中，选择产品或产品组件解决方案。     （Select Product-Component Solutions: Product or product-component solutions  are selected from alternative solutions.）</td>
+<td>SP1.1: 开发详细的备选解决方案及评选准则：开发详细的备选解决方案及评选准则。     (Develop Detailed Alternative Solutions and  Selection Criteria: Develop detailed alternative solutions and selection  criteria. )</td>
+<td>是否为技术架构识别了候选方案及候选准则？     如何决定哪些技术或者方案是最合适的？</td>
+<td>1. 候选方案如：数据库，编码语言等     候选准则如：易用性，熟悉程度，公司战略，客户要求等     2. 通过项目组头脑风暴对候选方案进行打分</td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>SP1.2 选择产品组件解决方案：选择最能满足所建立准则的产品组件解决方案。     (Select Product-Component Solutions: Select the product-component solutions  that best satisfy the criteria established. )</td>
+<td>如何选择最好的候选方案？     是否使用了哪些选择标准？     对于技术方案的选择，公司是否使用哪些规定？</td>
+<td>1. 明确问题，准备选择标准，准备候选方案，讨论并确定候选方案     2. 候选准则如：易用性，熟悉程度，公司战略，客户要求等     3. 符合公司战略方向，符合客户要求等</td>
+<td></td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>SG2：开发设计：开发产品或产品组件的设计。     (Develop the Design: Product or product-component designs are  developed. )</td>
+<td>SP2.1:  设计产品或产品组件：开发产品或产品组件的设计。     (Design the Product or Product Component: Develop a design for the product  or product component. )</td>
+<td>如何确保详细设计满足定义的需求？     在数据库设计方面使用了哪些技术或者工具？</td>
+<td>1. 评审、需求跟踪矩阵等方式     2. powerdesigner、rose等，sqlserver、oracle等</td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>SP2.2 建立技术数据包：建立并维护技术数据包。     (Establish a Technical Data Package: Establish and maintain a technical  data package. )</td>
+<td>如何决定设计已完成，可以开始编码工作？</td>
+<td>1. 通过需求跟踪矩阵、评审</td>
+<td></td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>SP2.3 利用准则设计接口：按照已建立并维护的准则，设计详细的产品组件接口面。     (Design Interfaces Using Criteria: Design comprehensive product-component  interfaces in terms of established and maintained criteria. )</td>
+<td>如何设计接口？     包含哪些接口类型？     在哪定义接口的需求？</td>
+<td>1. 识别接口、设计输入参数、设计输出参数等     2. 在产品需求说明书、详细设计说明书</td>
+<td></td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>SP2.4  进行自己开发、购买或重用分析：根据已建立的的准则，评估产品组件是要开发、购买还是重用。     (Perform Make, Buy, or Reuse Analyses: Evaluate whether the product  components should be developed, purchased, or reused based on established  criteria. )</td>
+<td>在哪定义哪些组件可以重用？     是否建立了组件重用的准则？</td>
+<td>1. 在概要设计、需求跟踪矩阵中定义     2. 历史项目、公用模块等</td>
+<td></td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>SG3：实现产品设计：依照设计，实现产品组件以及相关的辅助文档。     （Implement the Product Design: Product components, and associated support  documentation, are implemented from their designs. ）</td>
+<td>SP3.1:  实现设计：实现产品组件设计。     (Implement the Design: Implement the designs of the product components.  )</td>
+<td>编码阶段的参考文档主要有哪些？     如何确保编码的准确？     公司是否定义了编码标准？是否被遵循？</td>
+<td>1. 需求、设计、编码标准等     2. 代码评审、单元测试     3. Java、C#等编码标准     4. 工作产品（代码、数据库、编译后的文件等）的标准后缀名</td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>SP3.2 建立产品支持文档：建立并维护产品最终使用文档。     (Develop Product Support Documentation: Develop and maintain the end-use  documentation.)</td>
+<td>是否编写用户手册，安装手册？     由谁编写？</td>
+<td>是</td>
+<td></td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+</tbody></table>
+<h2 id=""><a href="#" class="headerlink" title=""></a></h2><h2 id="PI（设计人员）"><a href="#PI（设计人员）" class="headerlink" title="PI（设计人员）"></a>PI（设计人员）</h2><table>
+<thead>
+<tr>
+<th>目标</th>
+<th>实践</th>
+<th>问题翻译</th>
+<th>回答要点</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>SG1：为产品集成作准备：实施产品集成的准备工作。     （Prepare for Product Integration:   Preparation for product integration is conducted. ）</td>
+<td>SP1.1:  确定集成顺序：确定产品组件的集成顺序。     (Determine Integration Sequence: Determine the product-component  integration sequence.)</td>
+<td>你的项目是否识别了可替代的集成顺序？     是如何选择最合适的集成顺序的？</td>
+<td>1. 根据系统架构关系、业务关系     2. 先根据架构关系、再根据模块业务关系</td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>SP1.2 建立产品集成环境：建立并维护支持产品组件集成所需的环境。     (Establish the Product Integration Environment: Establish and maintain the  environment needed to support the integration of the product components. )</td>
+<td>你的项目需要哪些软、硬件集成环境？</td>
+<td>1.  硬件环境（服务器、客户端等配置）     2. 软件环境（数据库、服务等）</td>
+<td></td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>SP1.3 建立产品集成过程及准则：建立并维护产品组件集成的过程及准则。     (Establish Product Integration Procedures and Criteria: Establish and  maintain procedures and criteria for integration of the product  components.)</td>
+<td>你建立了哪些集成标准？</td>
+<td>1. 准入条件（单元测试通过）     2. 集成测试用例     3. 集成退出准则</td>
+<td></td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>SG2：确保界面相容性：产品组件的内部与外部界面都是相容的。     (Ensure Interface Compatibility: The  product-component interfaces, both internal and external, are  compatible. )</td>
+<td>SP2.1:  评审接口说明的完整性：评审接口说明的范围与完整性。     (Review Interface Descriptions for Completeness: Review interface  descriptions for coverage and completeness. )</td>
+<td>如何确保接口的参数与模块定义的接口一致？     如何确保接口的正确性和完整性？</td>
+<td>1. 接口一致性审查     2. 通过集成测试用例进行测试</td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>SP2.2 管理界面：管理产品与产品组件的内部与外部接口的定义、设计及变更。     (Manage Interfaces: Manage internal and external interface definitions,  designs, and changes for products and product components. )</td>
+<td>设计评审是否发现了问题？如何改正的？     有没有通过模拟/原型模型得到改进的内容？     如何管理这些改进内容？</td>
+<td>1.  有，通过记录评审问题，跟踪评审的改进结果（可举例说明）     2. 有，如识别到原来没有意识到的需求等     3. 通过评审缺陷记录进行跟踪、维护</td>
+<td></td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>SG3：组合产品组件并交付产品：组合已验证的产品组件，并交付已集成、已验证及以确认的产品。     （Assemble Product Components and Deliver the Product: Verified product  components are assembled and the integrated, verified, and validated product  is delivered.）</td>
+<td>SP3.1:  确认欲集成的产品组件已准备就绪：在产品组合前，确认欲组合成产品的产品组件已被适当地识别、依据其说明运作、以及确定产品组件接口符合接口说明。     (Confirm Readiness of Product Components for Integration: Confirm, prior to  assembly, that each product component required to assemble the product has  been properly identified, f</td>
+<td>如何确保集成前所有模块是无缺陷的？     Bug是不是在集成前都已解决？</td>
+<td>1. 单元测试、代码走查     2. 须全部解决才能开始测试/没有严重的Bug存在</td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>SP3.2 组合产品组件：按照产品集成顺序及现有的过程，组合产品组件。     (Assemble Product Components: Assemble product components according to the  product integration sequence and available procedures. )</td>
+<td>谁负责系统集成？     有没有集成计划？     集成的模块在哪存档？</td>
+<td>1. 项目经理/技术经理     2. 有     3. 在配置库中</td>
+<td></td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>SP3.3 评估已组合的产品组件：评估已组合的产品组件的接口相容性。     (Evaluate Assembled Product Components: Evaluate assembled product  components for interface compatibility.)</td>
+<td>谁执行集成测试？     测试缺陷记录在哪并且是如何跟踪的？</td>
+<td>1. 测试人员/开发人员     2. 记录在缺陷管理工具中，通过缺陷分配、每周跟踪</td>
+<td></td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>SP3.4 包装并交付产品或产品组件：包装已组合的产品或产品组件，并交付给适当的客户。     (Package and Deliver the Product or Product Component: Package the  assembled product or product component and deliver it to the appropriate  customer. )</td>
+<td>如何向客户发布系统？</td>
+<td>1.  测试通过，打包，验证，发布（验证软硬件环境，配置系统安装环境，安装系统）</td>
+<td></td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+</tbody></table>
+<h2 id="VER（测试人员）"><a href="#VER（测试人员）" class="headerlink" title="VER（测试人员）"></a>VER（测试人员）</h2><table>
+<thead>
+<tr>
+<th>目标</th>
+<th>实践</th>
+<th>问题翻译</th>
+<th>回答要点</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>SG1：验证之准备：进行验证准备。     （Prepare for Verification:   Preparation for verification is conducted.）</td>
+<td>SP1.1:  选择需验证之工作产品：选择需验证之工作产品及对每一工作产品使用的验证方法。     (Select Work Products for Verification: Select the work products to be  verified and the verification methods that will be used for each. )</td>
+<td>你的项目使用了哪些评审和测试类型？</td>
+<td>1. 非正式评审     2. 正式评审     3. 单元测试     4. 代码走查     5. 集成测试     6. 系统测试（试运行、验收测试）</td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>SP1.2 建立验证环境：建立并维护支持验证活动的环境。     (Establish the Verification Environment: Establish and maintain the  environment needed to support verification. )</td>
+<td>如何识别评审和测试需要的技能？     使用什么工具进行评审和测试？</td>
+<td>1. 依据公司定义的角色职责     2. 依据评审的工作产品的性质（业务、技术等）     3. 评审：工作产品检查单，测试：测试工具（loadrunner等）</td>
+<td></td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>SP1.3 建立验证过程和准则：建立并维护所选定的工作产品的验证过程和准则。     (Establish Verification Procedures and Criteria: Establish and maintain  verification procedures and criteria for the selected work products.)</td>
+<td>评审和测试都定义了哪些准则？     如何确定何时该停止评审和测试？</td>
+<td>1.  评审：评审检查单，测试：测试用例的预期结果     2. 通过评审检查单，达到测试用例的预期结果</td>
+<td></td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>SG2：进行同行评审：对所选定的工作产品进行同行评审。     (Perform Peer Reviews: Peer reviews  are performed on selected work products. )</td>
+<td>SP2.1:  准备同行评审：准备对所选定的工作产品进行同行评审。     (Prepare for Peer Reviews: Prepare for peer reviews of selected work  products. )</td>
+<td>在哪计划评审活动？     是否准备了评审检查单？</td>
+<td>1.  依据公司规定的评审要求，项目组的工作产品规模和重要程度（项目计划中的评审计划）     2. 重要的工作产品有检查单（如需求、设计等）</td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>SP2.2  进行同行评审：针对所选定的工作产品进行同行评审，并识别同行评审中出现的问题。     (Conduct Peer Reviews: Conduct peer reviews on selected work products and  identify issues resulting from the peer review. )</td>
+<td>你的项目执行哪些类型的评审？     在哪记录评审发现的问题？     如何确保问题得到解决？</td>
+<td>1.  非正式评审，正式评审，代码走查     2. 评审记录表中     3. 由技术经理定期跟踪缺陷是否按期解决，QA也会进行审计，配置管理员在基线时也会检查</td>
+<td></td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>SP2.3 分析同行评审资料：分析同行评审的准备、执行及结果资料。     (Analyze Peer Review Data: Analyze data about preparation, conduct, and  results of the peer reviews.)</td>
+<td>如何分析评审发现的问题？     根据分析的结果采取什么行动？</td>
+<td>1. 严重等级、缺陷密度等     2. 决定是否需要重评审</td>
+<td></td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>SG3：验证工作产品：按照指定的需求验证所选定的工作产品。     （Verify Selected Work Products: Selected work products are verified against  their specified requirements. ）</td>
+<td>SP3.1: 进行验证:  对所选定的工作产品进行验证。     (Perform Verification: Perform verification on the selected work products.  )</td>
+<td>在哪记录测试结果？      对缺陷如何处理？</td>
+<td>1. 缺陷跟踪工具（如TD等）     2. 分配缺陷解决人，解决后，测试人员重新验证</td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>SP3.2 分析验证结果并确定纠正措施：分析所有验证活动的结果，并确定纠正措施。     (Analyze Verification Results and Identify Corrective Action: Analyze the  results of all verification activities and identify corrective action.)</td>
+<td>对缺陷数据进行哪些分析？     根据分析的结果采取什么行动？</td>
+<td>1.  严重等级、缺陷密度、发现/解决趋势、技术类型等     2. 决定哪些模块需要加大测试力度</td>
+<td></td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+</tbody></table>
+<h2 id="VALVER-测试人员"><a href="#VALVER-测试人员" class="headerlink" title="VALVER(测试人员)"></a>VALVER(测试人员)</h2><table>
+<thead>
+<tr>
+<th>目标</th>
+<th>实践</th>
+<th>问题翻译</th>
+<th>回答要点</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>SG1：确认准备：进行确认准备     （Prepare for Validation: Preparation for validation is conducted.）</td>
+<td>SP1.1:  选择确认之产品：选择需确认的产品及产品组件，及对每一个产品及产品组件使用的确认方法。     (Select Products for Validation: Select products and product components to  be validated and the validation methods that will be used for each. )</td>
+<td>使用哪些测试类型对系统进行测试？     如何确认产品的性能？</td>
+<td>1. 单元测试、集成测试、系统测试、试运行测试、验收测试等     2. 网络速度、响应速度、容量、压力等</td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>SP1.2 建立确认环境：建立并维护支持确认活动所需的环境。     (Establish the Validation Environment: Establish and maintain the  environment needed to support validation.   )</td>
+<td>如何识别测试环境的软硬件需求？     使用了哪些测试工具或者软件？     如何跟踪测试发现的缺陷？</td>
+<td>1. 依据项目计划中的环境需求以及客户的运行环境要求，结合公司的标准工作环境配置     2. 测试软件（Nunit，LoadRunner等），测试管理工具（TD、BugFree等）     3. 通过缺陷管理工具进行跟踪（描述测试缺陷管理过程）</td>
+<td></td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>SP1.3 建立确认过程和准则：建立并维护确认过程和准则。     (Establish Validation Procedures and Criteria: Establish and maintain  procedures and criteria for validation.   )</td>
+<td>系统定义了哪些测试标准？     是否有编写测试用例？</td>
+<td>1. 测试用例的通过率，缺陷解决率、遗留率，缺陷解决周期等     2. 描述测试用例包含要素（输入、步骤、预期结果、实际结果等）</td>
+<td></td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>SG2：确认产品或产品组件：确认产品或产品组件，以确保在预期工作环境下可适用。     (Validate Product or Product Components:   The product or product components are validated to ensure that they  are suitable for use in their intended operating environment. )</td>
+<td>SP2.1:  进行确认：对选定的产品及产品组件进行确认。     (Perform Validation: Perform validation on the selected products and  product components. )</td>
+<td>客户是否提供接收标准？     使用什么环境进行确认？     如何跟踪系统、单元、集成测试的缺陷？     系统测试主要有哪些人参与？</td>
+<td>1. 描述客户的验收标准     2. 模拟环境、客户试运行的实际环境     3. 描述测试缺陷管理过程     4. 开发人员、项目经理、测试人员等</td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>SP2.2 分析确认结果：分析确认活动的结果，并识别问题。     (Analyze Validation Results: Analyze the results of the validation  activities and identify issues. )</td>
+<td>对系统测试结果进行哪些分析？     对分析结果采取哪些行动？     在哪存储系统测试的缺陷？</td>
+<td>1. 缺陷模块分布、缺陷解决周期、缺陷严重等级、缺陷类型（界面、逻辑、数据）分析     2. 对缺陷密度大的部分，加强测试力度</td>
+<td></td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+</tbody></table>
+
+            <hr>
+          </div>
+          <br>
+          <div>
+            
+              <p>
+                <i class="iconfont icon-inbox"></i>
+                
+                  <a class="hover-with-bg" href="/categories/%E5%85%B6%E4%BB%96">其他</a>
+                  &nbsp;
+                
+                  <a class="hover-with-bg" href="/categories/CMMI">CMMI</a>
+                  &nbsp;
+                
+              </p>
+            
+            <p>
+              <i class="iconfont icon-tag"></i>
+              
+              <span id="/2019/10/10/CMMI访谈笔记/" class="visitors leancloud_visitors" data-flag-title="CMMI访谈笔记">
+                <em id="visitors-text" class="post-meta-item-text"></em>
+                <i id="visitors-count"></i>
+              </span>
+            </p>
+            
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="d-none d-lg-block col-lg-2 toc-container">
+      
+  <div id="toc">
+    <p class="h4"><i class="far fa-list-alt"></i>&nbsp;目录</p>
+    <div id="tocbot"></div>
+  </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- custom -->
+
+
+<!-- Comments -->
+<div class="col-lg-7 mx-auto nopadding-md">
+  <div class="container comments mx-auto" id="comments">
+    
+  </div>
+</div>
+
+    
+  </main>
+
+  
+    <a class="z-depth-1" id="scroll-top-button" href="#" role="button">
+      <i class="fa fa-chevron-up scroll-top-arrow" aria-hidden="true"></i>
+    </a>
+  
+
+  
+    <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v"
+                 for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+  
+
+  <footer class="mt-5">
+  <div class="text-center py-3">
+<!--    <a href="#" target="_blank" rel="nofollow noopener"><b></b></a>-->
+<!--    <i class="iconfont icon-love"></i>-->
+<!--    <a href="#" target="_blank" rel="nofollow noopener"> <b>qy</b></a>-->
+    <br>
+    
+  </div>
+</footer>
+
+<!-- SCRIPTS -->
+<script src="/lib/jquery/jquery.min.js" ></script>
+<script src="/lib/popper/popper.min.js" ></script>
+<script src="/lib/bootstrap/js/bootstrap.min.js" ></script>
+<script src="/lib/mdbootstrap/js/mdb.min.js" ></script>
+<script src="/js/main.js" ></script>
+
+
+  <script src="/js/lazyload.js" ></script>
+
+
+  
+    <script src="/lib/tocbot/tocbot.min.js" ></script>
+  
+  <script src="/js/post.js" ></script>
+
+
+  <script src="/lib/prettify/prettify.min.js" ></script>
+  <script>
+    $(document).ready(function () {
+      $('pre').addClass('prettyprint  linenums');
+      prettyPrint();
+    })
+  </script>
+
+
+
+
+
+  <script src="/lib/anchor/anchor.min.js" ></script>
+  <script>
+    anchors.options = {
+      placement: "right",
+      visible: "false",
+      
+    };
+    var el = "h1,h2,h3,h4,h5,h6".split(",");
+    var res = [];
+    for (item of el) {
+      res.push(".markdown-body > " + item)
+    }
+    anchors.add(res.join(", "))
+  </script>
+
+
+
+  <script src="/js/local-search.js" ></script>
+  <script>
+    var path = "/local-search.xml";
+    var inputArea = document.querySelector("#local-search-input");
+    inputArea.onclick = function () {
+      getSearchFile(path);
+      this.onclick = null
+    }
+  </script>
+
+
+
+  <script src="/lib/fancybox/jquery.fancybox.min.js" ></script>
+  <script>
+    $('#post').find('img').each(
+      function () {
+        var _this = $(this);
+        var _src = _this.attr("src");
+        _this.wrap('<a data-fancybox="images" href="' + _src + '" ></a>');
+      }
+    );
+  </script>
+
+
+
+  <script src="/lib/smooth-scroll/smooth-scroll.min.js" ></script>
+
+
+
+
+</body>
+</html>

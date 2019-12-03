@@ -1,0 +1,852 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/rng.png">
+  <link rel="icon" type="image/png" href="/img/rng.png">
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  <meta name="description" content="">
+  <meta name="author" content="PZI">
+  <meta name="keywords" content="">
+  <title>JDBC认证服务配置 ~ Rng</title>
+
+  <link rel="stylesheet" href="/lib/font-awesome/css/all.min.css"  >
+<link rel="stylesheet" href="/lib/bootstrap/css/bootstrap.min.css"  >
+<link rel="stylesheet" href="/lib/mdbootstrap/css/mdb.min.css"  >
+<link rel="stylesheet" href="/lib/github-markdown/github-markdown.min.css"  >
+<link rel="stylesheet" href="https://at.alicdn.com/t/font_1067060_qzomjdt8bmp.css">
+
+
+  <link rel="stylesheet" href="/lib/prettify/tomorrow-night-eighties.min.css"  >
+
+<link rel="stylesheet" href="/css/main.css"  >
+
+
+  <link rel="stylesheet" href="/lib/fancybox/jquery.fancybox.min.css"  >
+
+
+  
+
+
+
+</head>
+
+
+<body>
+  <header style="height: 50vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand"
+       href="/">&nbsp;<strong>qy</strong>&nbsp;</a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          <li class="nav-item">
+            <a class="nav-link" href="/">主页</a>
+          </li>
+        
+          
+          
+          <li class="nav-item">
+            <a class="nav-link" href="/archives/">文章</a>
+          </li>
+        
+          
+          
+          <li class="nav-item">
+            <a class="nav-link" href="/categories/">分类</a>
+          </li>
+        
+          
+          
+          <li class="nav-item">
+            <a class="nav-link" href="/about/">关于</a>
+          </li>
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" data-toggle="modal" data-target="#modalSearch">&nbsp;&nbsp;<i
+                class="iconfont icon-search"></i>&nbsp;&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+
+</nav>
+
+    <div class="view intro-2" id="background"
+         style="background: url('/img/dl.png')no-repeat center center;
+           background-size: cover;
+           background-attachment: fixed;">
+      <div class="full-bg-img">
+        <div class="mask rgba-black-light flex-center">
+          <div class="container text-center white-text fadeInUp">
+            <span class="h2" id="subtitle">
+              
+
+              
+            </span>
+
+            
+              <br>
+              <p class="mt-3">星期二, 十一月 12日 2019, 2:40 下午</p>
+            
+          </div>
+
+          
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid">
+  <div class="row">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-md">
+      <div class="py-5 z-depth-3" id="board">
+        <div class="post-content mx-auto" id="post">
+          <div class="markdown-body">
+            <h1 id="JDBC认证服务配置"><a href="#JDBC认证服务配置" class="headerlink" title="JDBC认证服务配置"></a>JDBC认证服务配置</h1><h2 id="自定义登录与授权"><a href="#自定义登录与授权" class="headerlink" title="自定义登录与授权"></a>自定义登录与授权</h2><pre><code class="java">package com.qy.hos.business.oauth.service;
+
+import com.google.common.collect.Lists;
+import com.qy.hos.provider.api.UserService;
+import com.qy.hos.provider.domain.TbUser;
+import org.apache.dubbo.config.annotation.Reference;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
+
+/**
+ * @author Qy
+ * @title: UserDetailsServiceImpl
+ */
+@Service
+public class UserDetailsServiceImpl implements UserDetailsService {
+
+    @Reference(version = &quot;1.0.0&quot;)
+    private UserService userService;
+
+    @Override
+    public UserDetails loadUserByUsername(String s) throws UsernameNotFoundException {
+        //给每一个用户授予USER权限
+        List&lt;GrantedAuthority&gt; grantedAuthorities = Lists.newArrayList();
+        SimpleGrantedAuthority grantedAuthority = new SimpleGrantedAuthority(&quot;USER&quot;);
+        grantedAuthorities.add(grantedAuthority);
+
+        TbUser user = userService.getUser(s);
+        //账号存在
+        if(user != null){
+            return new User(user.getUsername(),user.getPassword(),grantedAuthorities);
+
+        }else {
+            return null;
+        }
+    }
+
+
+//
+//    private static final String USERNAME = &quot;admin&quot;;
+//    private static final String PASSWORD = &quot;$2a$10$WhCuqmyCsYdqtJvM0/J4seCU.xZQHe2snNE5VFUuBGUZWPbtdl3GG&quot;;
+//    @Override
+//    public UserDetails loadUserByUsername(String s) throws UsernameNotFoundException {
+//
+//        //判断用户名是否匹配
+//        if (s.equals(USERNAME)) {
+//            List&lt;GrantedAuthority&gt; grantedAuthorities = Lists.newArrayList();
+//            GrantedAuthority grantedAuthority = new SimpleGrantedAuthority(&quot;USER&quot;);
+//            grantedAuthorities.add(grantedAuthority);
+//            return new User(USERNAME, PASSWORD, grantedAuthorities);
+//        }else {
+//            return null;
+//        }
+//    }
+}
+</code></pre>
+<h2 id="服务器安全配置"><a href="#服务器安全配置" class="headerlink" title="服务器安全配置"></a>服务器安全配置</h2><pre><code class="java">package com.qy.hos.business.oauth.configure;
+
+import com.qy.hos.business.oauth.service.UserDetailsServiceImpl;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.builders.WebSecurity;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.oauth2.config.annotation.web.configuration.EnableResourceServer;
+
+/**
+ * @author Qy
+ * @title: WebSecurityConfiguration
+ */
+@Configuration
+@EnableWebSecurity
+@EnableResourceServer
+@EnableGlobalMethodSecurity(prePostEnabled = true, securedEnabled = true, jsr250Enabled = true)
+public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
+    @Bean
+    public BCryptPasswordEncoder passwordEncoder() {
+        // 配置默认的加密方式
+        return new BCryptPasswordEncoder();
+    }
+
+
+    @Bean
+    @Override
+    protected UserDetailsService userDetailsService() {
+        return new UserDetailsServiceImpl();
+    }
+
+    @Override
+    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
+        auth.userDetailsService(userDetailsService());
+    }
+
+    @Override
+    public void configure(WebSecurity web) throws Exception {
+        web.ignoring().antMatchers(&quot;/login&quot;);
+        web.ignoring().antMatchers(&quot;/swagger-resources/**&quot;, &quot;/webjars/**&quot;, &quot;/v2/**&quot;, &quot;/swagger-ui.html/**&quot;);
+    }
+
+
+
+    /**
+     * 用于支持 password 模式
+     *
+     * @return
+     * @throws Exception
+     */
+    @Bean
+    @Override
+    public AuthenticationManager authenticationManagerBean() throws Exception {
+        return super.authenticationManagerBean();
+    }
+
+
+    @Override
+    protected void configure(HttpSecurity http) throws Exception {
+        http.exceptionHandling()
+                .and()
+                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
+    }
+}</code></pre>
+<h2 id="认证服务器配置"><a href="#认证服务器配置" class="headerlink" title="认证服务器配置"></a>认证服务器配置</h2><pre><code class="java">package com.qy.hos.business.oauth.configure;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.boot.jdbc.DataSourceBuilder;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Primary;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.oauth2.config.annotation.configurers.ClientDetailsServiceConfigurer;
+import org.springframework.security.oauth2.config.annotation.web.configuration.AuthorizationServerConfigurerAdapter;
+import org.springframework.security.oauth2.config.annotation.web.configuration.EnableAuthorizationServer;
+import org.springframework.security.oauth2.config.annotation.web.configurers.AuthorizationServerEndpointsConfigurer;
+import org.springframework.security.oauth2.config.annotation.web.configurers.AuthorizationServerSecurityConfigurer;
+import org.springframework.security.oauth2.provider.ClientDetailsService;
+import org.springframework.security.oauth2.provider.client.JdbcClientDetailsService;
+import org.springframework.security.oauth2.provider.token.TokenStore;
+import org.springframework.security.oauth2.provider.token.store.InMemoryTokenStore;
+import org.springframework.security.oauth2.provider.token.store.JdbcTokenStore;
+
+import javax.sql.DataSource;
+
+/**
+ * @author Qy
+ * @title: AuthorizationServerConfiguration
+ */
+@Configuration
+@EnableAuthorizationServer
+public class AuthorizationServerConfiguration extends AuthorizationServerConfigurerAdapter {
+
+    @Autowired
+    private BCryptPasswordEncoder passwordEncoder;
+    /**
+     * 注入用于支持 password 模式
+     */
+    @Autowired
+    private AuthenticationManager authenticationManager;
+
+    @Bean
+    @Primary
+    @ConfigurationProperties(prefix = &quot;spring.datasource&quot;)
+    public DataSource dataSource() {
+        // 配置数据源（注意，我使用的是 HikariCP 连接池），以上注解是指定数据源，否则会有冲突
+        return DataSourceBuilder.create().build();
+    }
+    @Bean
+    public TokenStore tokenStore() {
+        // 基于 JDBC 实现，令牌保存到数据库
+        return new JdbcTokenStore(dataSource());
+//        return new RedisTokenStore(redisConnectionFactory);
+    }
+
+    @Bean
+    public ClientDetailsService jdbcClientDetailsService() {
+        // 基于 JDBC 实现，需要事先在数据库配置客户端信息
+        return new JdbcClientDetailsService(dataSource());
+    }
+    @Override
+    public void configure(AuthorizationServerEndpointsConfigurer endpoints) throws Exception {
+        endpoints
+                // 用于支持密码模式
+                .authenticationManager(authenticationManager)
+                .tokenStore(tokenStore());
+    }
+    @Override
+    public void configure(AuthorizationServerSecurityConfigurer security) throws Exception {
+        security
+                // 允许客户端访问 /oauth/check_token 检查 token
+                .checkTokenAccess(&quot;isAuthenticated()&quot;)
+                .allowFormAuthenticationForClients();
+    }
+    /**
+     * 配置客户端
+     *
+     * @param clients
+     * @throws Exception
+     */
+    @Override
+    public void configure(ClientDetailsServiceConfigurer clients) throws Exception {
+        // 客户端配置
+        clients.withClientDetails(jdbcClientDetailsService());
+    }
+
+}</code></pre>
+<h2 id="数据库表"><a href="#数据库表" class="headerlink" title="数据库表"></a>数据库表</h2><p>懒得整理 有一些表是多余的</p>
+<pre><code class="sql">-- --------------------------------------------------------
+-- 主机:                           127.0.0.1
+-- 服务器版本:                        10.3.9-MariaDB - mariadb.org binary distribution
+-- 服务器操作系统:                      Win64
+-- HeidiSQL 版本:                  9.4.0.5125
+-- --------------------------------------------------------
+
+/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
+/*!40101 SET NAMES utf8 */;
+/*!50503 SET NAMES utf8mb4 */;
+/*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
+/*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE=&#39;NO_AUTO_VALUE_ON_ZERO&#39; */;
+
+
+-- 导出 night 的数据库结构
+CREATE DATABASE IF NOT EXISTS `night` /*!40100 DEFAULT CHARACTER SET utf8 */;
+USE `night`;
+
+-- 导出  表 night.admin_log 结构
+CREATE TABLE IF NOT EXISTS `admin_log` (
+  `id` int(10) NOT NULL AUTO_INCREMENT,
+  `admin_id` varchar(50) DEFAULT NULL,
+  `ip` varchar(50) DEFAULT NULL,
+  `address` varchar(50) DEFAULT NULL,
+  `user_agent` varchar(50) DEFAULT NULL,
+  `create_time` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=79 DEFAULT CHARSET=utf8;
+
+-- 正在导出表  night.admin_log 的数据：~66 rows (大约)
+/*!40000 ALTER TABLE `admin_log` DISABLE KEYS */;
+REPLACE INTO `admin_log` (`id`, `admin_id`, `ip`, `address`, `user_agent`, `create_time`) VALUES
+    (13, &#39;1&#39;, &#39;127.0.0.1&#39;, &#39;内网IP&#39;, &#39;Unknown&#39;, &#39;2019-10-24 17:10:16&#39;),
+    (14, &#39;1&#39;, &#39;127.0.0.1&#39;, &#39;内网IP&#39;, &#39;Unknown&#39;, &#39;2019-10-24 17:25:43&#39;),
+    (15, &#39;1&#39;, &#39;127.0.0.1&#39;, &#39;内网IP&#39;, &#39;Unknown&#39;, &#39;2019-10-24 19:07:34&#39;),
+    (16, &#39;1&#39;, &#39;127.0.0.1&#39;, &#39;内网IP&#39;, &#39;Unknown&#39;, &#39;2019-10-24 17:09:53&#39;),
+    (17, &#39;1&#39;, &#39;127.0.0.1&#39;, &#39;内网IP&#39;, &#39;Unknown&#39;, &#39;2019-10-24 17:13:43&#39;),
+    (18, &#39;1&#39;, &#39;127.0.0.1&#39;, &#39;内网IP&#39;, &#39;Unknown&#39;, &#39;2019-10-24 19:20:58&#39;),
+    (19, &#39;1&#39;, &#39;127.0.0.1&#39;, &#39;内网IP&#39;, &#39;Chrome&#39;, &#39;2019-10-24 19:21:13&#39;),
+    (20, &#39;1&#39;, &#39;127.0.0.1&#39;, &#39;内网IP&#39;, &#39;Chrome&#39;, &#39;2019-10-24 19:21:23&#39;),
+    (21, &#39;1&#39;, &#39;127.0.0.1&#39;, &#39;内网IP&#39;, &#39;Chrome&#39;, &#39;2019-10-24 19:21:51&#39;),
+    (22, &#39;1&#39;, &#39;127.0.0.1&#39;, &#39;内网IP&#39;, &#39;Chrome&#39;, &#39;2019-10-24 19:21:57&#39;),
+    (23, &#39;1&#39;, &#39;127.0.0.1&#39;, &#39;内网IP&#39;, &#39;Chrome&#39;, &#39;2019-10-24 19:22:21&#39;),
+    (24, &#39;1&#39;, &#39;127.0.0.1&#39;, &#39;内网IP&#39;, &#39;Unknown&#39;, &#39;2019-10-24 19:47:24&#39;),
+    (25, &#39;1&#39;, &#39;127.0.0.1&#39;, &#39;内网IP&#39;, &#39;Chrome&#39;, &#39;2019-10-24 19:48:05&#39;),
+    (26, &#39;1&#39;, &#39;127.0.0.1&#39;, &#39;内网IP&#39;, &#39;Chrome&#39;, &#39;2019-10-25 08:53:36&#39;),
+    (27, &#39;1&#39;, &#39;127.0.0.1&#39;, &#39;内网IP&#39;, &#39;Chrome&#39;, &#39;2019-10-25 09:23:06&#39;),
+    (28, &#39;1&#39;, &#39;127.0.0.1&#39;, &#39;内网IP&#39;, &#39;Chrome&#39;, &#39;2019-10-25 09:24:29&#39;),
+    (29, &#39;1&#39;, &#39;127.0.0.1&#39;, &#39;内网IP&#39;, &#39;Chrome&#39;, &#39;2019-10-25 09:25:37&#39;),
+    (30, &#39;1&#39;, &#39;127.0.0.1&#39;, &#39;内网IP&#39;, &#39;Chrome&#39;, &#39;2019-10-25 09:26:37&#39;),
+    (31, &#39;1&#39;, &#39;127.0.0.1&#39;, &#39;内网IP&#39;, &#39;Unknown&#39;, &#39;2019-10-25 09:31:41&#39;),
+    (32, &#39;1&#39;, &#39;127.0.0.1&#39;, &#39;内网IP&#39;, &#39;Chrome&#39;, &#39;2019-10-25 09:33:47&#39;),
+    (33, &#39;1&#39;, &#39;127.0.0.1&#39;, &#39;内网IP&#39;, &#39;Unknown&#39;, &#39;2019-10-25 09:34:42&#39;),
+    (34, &#39;1&#39;, &#39;127.0.0.1&#39;, &#39;内网IP&#39;, &#39;Chrome&#39;, &#39;2019-10-25 09:36:13&#39;),
+    (35, &#39;1&#39;, &#39;127.0.0.1&#39;, &#39;内网IP&#39;, &#39;Chrome&#39;, &#39;2019-10-25 09:41:38&#39;),
+    (36, &#39;1&#39;, &#39;127.0.0.1&#39;, &#39;内网IP&#39;, &#39;Chrome&#39;, &#39;2019-10-25 09:41:40&#39;),
+    (37, &#39;1&#39;, &#39;127.0.0.1&#39;, &#39;内网IP&#39;, &#39;Chrome&#39;, &#39;2019-10-25 09:41:48&#39;),
+    (38, &#39;1&#39;, &#39;127.0.0.1&#39;, &#39;内网IP&#39;, &#39;Chrome&#39;, &#39;2019-10-25 09:42:49&#39;),
+    (39, &#39;1&#39;, &#39;127.0.0.1&#39;, &#39;内网IP&#39;, &#39;Chrome&#39;, &#39;2019-10-25 09:42:55&#39;),
+    (40, &#39;1&#39;, &#39;127.0.0.1&#39;, &#39;内网IP&#39;, &#39;Unknown&#39;, &#39;2019-10-25 09:43:14&#39;),
+    (41, &#39;1&#39;, &#39;127.0.0.1&#39;, &#39;内网IP&#39;, &#39;Unknown&#39;, &#39;2019-10-25 09:45:23&#39;),
+    (42, &#39;1&#39;, &#39;127.0.0.1&#39;, &#39;内网IP&#39;, &#39;Unknown&#39;, &#39;2019-10-25 09:46:45&#39;),
+    (43, &#39;1&#39;, &#39;127.0.0.1&#39;, &#39;内网IP&#39;, &#39;Chrome&#39;, &#39;2019-10-25 09:46:57&#39;),
+    (44, &#39;1&#39;, &#39;127.0.0.1&#39;, &#39;内网IP&#39;, &#39;Unknown&#39;, &#39;2019-10-25 09:53:49&#39;),
+    (45, &#39;1&#39;, &#39;127.0.0.1&#39;, &#39;内网IP&#39;, &#39;Unknown&#39;, &#39;2019-10-25 09:53:52&#39;),
+    (46, &#39;1&#39;, &#39;127.0.0.1&#39;, &#39;内网IP&#39;, &#39;Unknown&#39;, &#39;2019-10-25 09:54:22&#39;),
+    (47, &#39;1&#39;, &#39;127.0.0.1&#39;, &#39;内网IP&#39;, &#39;Unknown&#39;, &#39;2019-10-25 09:56:07&#39;),
+    (48, &#39;1&#39;, &#39;127.0.0.1&#39;, &#39;内网IP&#39;, &#39;Unknown&#39;, &#39;2019-10-25 09:58:00&#39;),
+    (49, &#39;1&#39;, &#39;127.0.0.1&#39;, &#39;内网IP&#39;, &#39;Unknown&#39;, &#39;2019-10-25 09:59:07&#39;),
+    (50, &#39;1&#39;, &#39;127.0.0.1&#39;, &#39;内网IP&#39;, &#39;Unknown&#39;, &#39;2019-10-25 09:59:09&#39;),
+    (51, &#39;1&#39;, &#39;127.0.0.1&#39;, &#39;内网IP&#39;, &#39;Chrome&#39;, &#39;2019-10-25 09:59:26&#39;),
+    (52, &#39;1&#39;, &#39;127.0.0.1&#39;, &#39;内网IP&#39;, &#39;Unknown&#39;, &#39;2019-10-25 10:29:15&#39;),
+    (53, &#39;1&#39;, &#39;127.0.0.1&#39;, &#39;内网IP&#39;, &#39;Unknown&#39;, &#39;2019-10-25 10:36:40&#39;),
+    (54, &#39;1&#39;, &#39;127.0.0.1&#39;, &#39;内网IP&#39;, &#39;Unknown&#39;, &#39;2019-10-25 10:48:14&#39;),
+    (55, &#39;1&#39;, &#39;127.0.0.1&#39;, &#39;内网IP&#39;, &#39;Unknown&#39;, &#39;2019-10-25 11:10:17&#39;),
+    (56, &#39;1&#39;, &#39;127.0.0.1&#39;, &#39;内网IP&#39;, &#39;Unknown&#39;, &#39;2019-10-25 14:13:24&#39;),
+    (57, &#39;1&#39;, &#39;127.0.0.1&#39;, &#39;内网IP&#39;, &#39;Unknown&#39;, &#39;2019-10-25 14:29:18&#39;),
+    (58, &#39;1&#39;, &#39;127.0.0.1&#39;, &#39;内网IP&#39;, &#39;Unknown&#39;, &#39;2019-10-25 14:42:15&#39;),
+    (59, &#39;1&#39;, &#39;127.0.0.1&#39;, NULL, &#39;Unknown&#39;, &#39;2019-10-28 14:36:44&#39;),
+    (60, &#39;1&#39;, &#39;127.0.0.1&#39;, &#39;内网IP&#39;, &#39;Unknown&#39;, &#39;2019-10-28 14:36:51&#39;),
+    (61, &#39;1&#39;, &#39;127.0.0.1&#39;, &#39;内网IP&#39;, &#39;Unknown&#39;, &#39;2019-10-28 14:36:51&#39;),
+    (62, &#39;1&#39;, &#39;127.0.0.1&#39;, &#39;内网IP&#39;, &#39;Unknown&#39;, &#39;2019-10-28 14:36:52&#39;),
+    (63, &#39;1&#39;, &#39;127.0.0.1&#39;, &#39;内网IP&#39;, &#39;Unknown&#39;, &#39;2019-10-28 09:21:15&#39;),
+    (64, &#39;1&#39;, &#39;127.0.0.1&#39;, &#39;内网IP&#39;, &#39;Unknown&#39;, &#39;2019-10-28 13:49:50&#39;),
+    (65, &#39;1&#39;, &#39;127.0.0.1&#39;, &#39;内网IP&#39;, &#39;Unknown&#39;, &#39;2019-10-28 14:36:43&#39;),
+    (66, &#39;1&#39;, &#39;127.0.0.1&#39;, &#39;内网IP&#39;, &#39;Unknown&#39;, &#39;2019-10-28 14:36:47&#39;),
+    (67, &#39;1&#39;, &#39;127.0.0.1&#39;, NULL, &#39;Unknown&#39;, &#39;2019-10-28 14:36:53&#39;),
+    (68, &#39;1&#39;, &#39;127.0.0.1&#39;, &#39;内网IP&#39;, &#39;Unknown&#39;, &#39;2019-10-28 14:41:26&#39;),
+    (69, &#39;1&#39;, &#39;127.0.0.1&#39;, &#39;内网IP&#39;, &#39;Unknown&#39;, &#39;2019-10-28 14:36:45&#39;),
+    (70, &#39;1&#39;, &#39;127.0.0.1&#39;, &#39;内网IP&#39;, &#39;Unknown&#39;, &#39;2019-10-28 14:36:46&#39;),
+    (71, &#39;1&#39;, &#39;127.0.0.1&#39;, &#39;内网IP&#39;, &#39;Unknown&#39;, &#39;2019-10-28 14:36:47&#39;),
+    (72, &#39;1&#39;, &#39;127.0.0.1&#39;, &#39;内网IP&#39;, &#39;Unknown&#39;, &#39;2019-10-28 14:36:50&#39;),
+    (73, &#39;1&#39;, &#39;127.0.0.1&#39;, &#39;内网IP&#39;, &#39;Unknown&#39;, &#39;2019-10-28 14:36:47&#39;),
+    (74, &#39;1&#39;, &#39;127.0.0.1&#39;, NULL, &#39;Unknown&#39;, &#39;2019-10-28 14:36:48&#39;),
+    (75, &#39;1&#39;, &#39;127.0.0.1&#39;, &#39;内网IP&#39;, &#39;Unknown&#39;, &#39;2019-10-28 14:36:48&#39;),
+    (76, &#39;1&#39;, &#39;127.0.0.1&#39;, &#39;内网IP&#39;, &#39;Unknown&#39;, &#39;2019-10-28 14:36:52&#39;),
+    (77, &#39;1&#39;, &#39;127.0.0.1&#39;, &#39;内网IP&#39;, &#39;Unknown&#39;, &#39;2019-10-29 11:01:32&#39;),
+    (78, &#39;dengliang&#39;, &#39;10.1.53.89&#39;, &#39;dldlld&#39;, &#39;dldldl&#39;, &#39;2019-10-29 13:46:40&#39;);
+/*!40000 ALTER TABLE `admin_log` ENABLE KEYS */;
+
+-- 导出  表 night.clientdetails 结构
+CREATE TABLE IF NOT EXISTS `clientdetails` (
+  `appId` varchar(128) NOT NULL,
+  `resourceIds` varchar(256) DEFAULT NULL,
+  `appSecret` varchar(256) DEFAULT NULL,
+  `scope` varchar(256) DEFAULT NULL,
+  `grantTypes` varchar(256) DEFAULT NULL,
+  `redirectUrl` varchar(256) DEFAULT NULL,
+  `authorities` varchar(256) DEFAULT NULL,
+  `access_token_validity` int(11) DEFAULT NULL,
+  `refresh_token_validity` int(11) DEFAULT NULL,
+  `additionalInformation` varchar(4096) DEFAULT NULL,
+  `autoApproveScopes` varchar(256) DEFAULT NULL,
+  PRIMARY KEY (`appId`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- 正在导出表  night.clientdetails 的数据：~0 rows (大约)
+/*!40000 ALTER TABLE `clientdetails` DISABLE KEYS */;
+/*!40000 ALTER TABLE `clientdetails` ENABLE KEYS */;
+
+-- 导出  表 night.menu 结构
+CREATE TABLE IF NOT EXISTS `menu` (
+  `id` varchar(50) NOT NULL COMMENT &#39;菜单id&#39;,
+  `price` varchar(50) DEFAULT NULL COMMENT &#39;价格&#39;,
+  `total` varchar(50) DEFAULT NULL COMMENT &#39;总数&#39;,
+  `name` varchar(50) DEFAULT NULL COMMENT &#39;菜单名字&#39;,
+  `parent_id` varchar(50) DEFAULT NULL COMMENT &#39;父级菜单id&#39;,
+  `url` varchar(50) DEFAULT NULL COMMENT &#39;菜单url&#39;,
+  `icon` varchar(50) DEFAULT NULL COMMENT &#39;菜单图标&#39;,
+  `order` int(11) DEFAULT NULL COMMENT &#39;菜单顺序&#39;,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- 正在导出表  night.menu 的数据：~4 rows (大约)
+/*!40000 ALTER TABLE `menu` DISABLE KEYS */;
+REPLACE INTO `menu` (`id`, `price`, `total`, `name`, `parent_id`, `url`, `icon`, `order`) VALUES
+    (&#39;8c9557c7183e4d9295a208beded245f7&#39;, NULL, NULL, &#39;skzy&#39;, &#39;c9964055f8b94124ba0b714a48bcc98b&#39;, NULL, &#39;sbkzy.png&#39;, 1),
+    (&#39;c9964055f8b94124ba0b714a48bcc98b&#39;, NULL, NULL, &#39;qiuyang&#39;, &#39;0&#39;, NULL, &#39;qy.png&#39;, 2);
+/*!40000 ALTER TABLE `menu` ENABLE KEYS */;
+
+-- 导出  表 night.oauth_access_token 结构
+CREATE TABLE IF NOT EXISTS `oauth_access_token` (
+  `token_id` varchar(256) DEFAULT NULL,
+  `token` blob DEFAULT NULL,
+  `authentication_id` varchar(128) NOT NULL,
+  `user_name` varchar(256) DEFAULT NULL,
+  `client_id` varchar(256) DEFAULT NULL,
+  `authentication` blob DEFAULT NULL,
+  `refresh_token` varchar(256) DEFAULT NULL,
+  PRIMARY KEY (`authentication_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- 正在导出表  night.oauth_access_token 的数据：~1 rows (大约)
+/*!40000 ALTER TABLE `oauth_access_token` DISABLE KEYS */;
+REPLACE INTO `oauth_access_token` (`token_id`, `token`, `authentication_id`, `user_name`, `client_id`, `authentication`, `refresh_token`) VALUES
+    (&#39;0131b9ee3ed3e4ceb4a968efdb90aa97&#39;, _binary 0xACED0005737200436F72672E737072696E676672616D65776F726B2E73656375726974792E6F61757468322E636F6D6D6F6E2E44656661756C744F4175746832416363657373546F6B656E0CB29E361B24FACE0200064C00156164646974696F6E616C496E666F726D6174696F6E74000F4C6A6176612F7574696C2F4D61703B4C000A65787069726174696F6E7400104C6A6176612F7574696C2F446174653B4C000C72656672657368546F6B656E74003F4C6F72672F737072696E676672616D65776F726B2F73656375726974792F6F61757468322F636F6D6D6F6E2F4F417574683252656672657368546F6B656E3B4C000573636F706574000F4C6A6176612F7574696C2F5365743B4C0009746F6B656E547970657400124C6A6176612F6C616E672F537472696E673B4C000576616C756571007E000578707372001E6A6176612E7574696C2E436F6C6C656374696F6E7324456D7074794D6170593614855ADCE73F000078707372000E6A6176612E7574696C2E44617465686A3F4B597419030000787077080000016E602F47217870737200256A6176612E7574696C2E436F6C6C656374696F6E7324556E6D6F6469666961626C65536574801D92D18F9B80550200007872002C6A6176612E7574696C2E436F6C6C656374696F6E7324556E6D6F6469666961626C65436F6C6C656374696F6E19420080CB5E3F0200014C0001637400164C6A6176612F7574696C2F436F6C6C656374696F6E3B7870737200176A6176612E7574696C2E4C696E6B656448617368536574D86CD75A95DD2A1E020000787200116A6176612E7574696C2E48617368536574BA44859596B83F0300007870770C000000023F400000000000017400036170707874000662656172657274002464623835343631302D636238382D343530632D616634392D613433623665363465626430, &#39;8502edc3f4c61f1000b1932e6a3756f1&#39;, &#39;admin&#39;, &#39;client&#39;, _binary 0xACED0005737200416F72672E737072696E676672616D65776F726B2E73656375726974792E6F61757468322E70726F76696465722E4F417574683241757468656E7469636174696F6EBD400B02166252130200024C000D73746F7265645265717565737474003C4C6F72672F737072696E676672616D65776F726B2F73656375726974792F6F61757468322F70726F76696465722F4F4175746832526571756573743B4C00127573657241757468656E7469636174696F6E7400324C6F72672F737072696E676672616D65776F726B2F73656375726974792F636F72652F41757468656E7469636174696F6E3B787200476F72672E737072696E676672616D65776F726B2E73656375726974792E61757468656E7469636174696F6E2E416273747261637441757468656E7469636174696F6E546F6B656ED3AA287E6E47640E0200035A000D61757468656E746963617465644C000B617574686F7269746965737400164C6A6176612F7574696C2F436F6C6C656374696F6E3B4C000764657461696C737400124C6A6176612F6C616E672F4F626A6563743B787000737200266A6176612E7574696C2E436F6C6C656374696F6E7324556E6D6F6469666961626C654C6973743F2531B5EC3F0200014C00046C6973747400104C6A6176612F7574696C2F4C6973743B7872002C6A6176612E7574696C2E436F6C6C656374696F6E7324556E6D6F6469666961626C65436F6C6C656374696F6E19420080CB5E3F0200014C00016371007E00047870737200136A6176612E7574696C2E41727261794C6973747881D21D99C7613F000149000473697A65787000000001770400000001737200426F72672E737072696E676672616D65776F726B2E73656375726974792E636F72652E617574686F726974792E53696D706C654772616E746564417574686F72697479000000000000013F00014C0004726F6C657400124C6A6176612F6C616E672F537472696E673B7870740004555345527871007E000C707372003A6F72672E737072696E676672616D65776F726B2E73656375726974792E6F61757468322E70726F76696465722E4F41757468325265717565737400000000000000010200075A0008617070726F7665644C000B617574686F72697469657371007E00044C000A657874656E73696F6E7374000F4C6A6176612F7574696C2F4D61703B4C000B726564697265637455726971007E000E4C00077265667265736874003B4C6F72672F737072696E676672616D65776F726B2F73656375726974792F6F61757468322F70726F76696465722F546F6B656E526571756573743B4C000B7265736F7572636549647374000F4C6A6176612F7574696C2F5365743B4C000D726573706F6E7365547970657371007E0014787200386F72672E737072696E676672616D65776F726B2E73656375726974792E6F61757468322E70726F76696465722E426173655265717565737436287A3EA371693F00034C0008636C69656E74496471007E000E4C001172657175657374506172616D657465727371007E00124C000573636F706571007E00147870740006636C69656E74737200256A6176612E7574696C2E436F6C6C656374696F6E7324556E6D6F6469666961626C654D6170F1A5A8FE743F420200014C00016D71007E00127870737200116A6176612E7574696C2E486173684D61700507DAC13F603F000246000A6C6F6164466163746F724900097468726573686F6C6478703F400000000000067708000000080000000374000A6772616E745F7479706574000870617373776F7264740009636C69656E745F6964740006636C69656E74740008757365726E616D6574000561646D696E78737200256A6176612E7574696C2E436F6C6C656374696F6E7324556E6D6F6469666961626C65536574801D92D18F9B80550200007871007E0009737200176A6176612E7574696C2E4C696E6B656448617368536574D86CD75A95DD2A1E020000787200116A6176612E7574696C2E48617368536574BA44859596B83F0300007870770C000000103F4000000000000174000361707078017371007E0025770C000000103F40000000000000787371007E001A3F40000000000000770800000010000000007870707371007E0025770C000000103F40000000000000787371007E0025770C000000103F40000000000000787372004F6F72672E737072696E676672616D65776F726B2E73656375726974792E61757468656E7469636174696F6E2E557365726E616D6550617373776F726441757468656E7469636174696F6E546F6B656E000000000000013F00024C000B63726564656E7469616C7371007E00054C00097072696E636970616C71007E00057871007E0003017371007E00077371007E000B0000000177040000000171007E000F7871007E002F737200176A6176612E7574696C2E4C696E6B6564486173684D617034C04E5C106CC0FB0200015A000B6163636573734F726465727871007E001A3F400000000000067708000000080000000474000D636C69656E745F73656372657474000673656372657471007E001C71007E001D71007E001E71007E001F71007E002071007E0021780070737200326F72672E737072696E676672616D65776F726B2E73656375726974792E636F72652E7573657264657461696C732E55736572000000000000013F00075A00116163636F756E744E6F6E457870697265645A00106163636F756E744E6F6E4C6F636B65645A001563726564656E7469616C734E6F6E457870697265645A0007656E61626C65644C000B617574686F72697469657371007E00144C000870617373776F726471007E000E4C0008757365726E616D6571007E000E7870010101017371007E0022737200116A6176612E7574696C2E54726565536574DD98509395ED875B0300007870737200466F72672E737072696E676672616D65776F726B2E73656375726974792E636F72652E7573657264657461696C732E5573657224417574686F72697479436F6D70617261746F72000000000000013F0000787077040000000171007E000F787074000561646D696E, NULL),
+    (&#39;fa5259bf6520c3789dddce4aba06b0b7&#39;, _binary 0xACED0005737200436F72672E737072696E676672616D65776F726B2E73656375726974792E6F61757468322E636F6D6D6F6E2E44656661756C744F4175746832416363657373546F6B656E0CB29E361B24FACE0200064C00156164646974696F6E616C496E666F726D6174696F6E74000F4C6A6176612F7574696C2F4D61703B4C000A65787069726174696F6E7400104C6A6176612F7574696C2F446174653B4C000C72656672657368546F6B656E74003F4C6F72672F737072696E676672616D65776F726B2F73656375726974792F6F61757468322F636F6D6D6F6E2F4F417574683252656672657368546F6B656E3B4C000573636F706574000F4C6A6176612F7574696C2F5365743B4C0009746F6B656E547970657400124C6A6176612F6C616E672F537472696E673B4C000576616C756571007E000578707372001E6A6176612E7574696C2E436F6C6C656374696F6E7324456D7074794D6170593614855ADCE73F000078707372000E6A6176612E7574696C2E44617465686A3F4B597419030000787077080000016E91E67F6A787372004C6F72672E737072696E676672616D65776F726B2E73656375726974792E6F61757468322E636F6D6D6F6E2E44656661756C744578706972696E674F417574683252656672657368546F6B656E2FDF47639DD0C9B70200014C000A65787069726174696F6E71007E0002787200446F72672E737072696E676672616D65776F726B2E73656375726974792E6F61757468322E636F6D6D6F6E2E44656661756C744F417574683252656672657368546F6B656E733F0A6354D45E0200014C000576616C756571007E0005787074002431633138383361652D633335322D343138382D613936312D3833366430333664303962337371007E000977080000016E91E67F6A78737200256A6176612E7574696C2E436F6C6C656374696F6E7324556E6D6F6469666961626C65536574801D92D18F9B80550200007872002C6A6176612E7574696C2E436F6C6C656374696F6E7324556E6D6F6469666961626C65436F6C6C656374696F6E19420080CB5E3F0200014C0001637400164C6A6176612F7574696C2F436F6C6C656374696F6E3B7870737200176A6176612E7574696C2E4C696E6B656448617368536574D86CD75A95DD2A1E020000787200116A6176612E7574696C2E48617368536574BA44859596B83F0300007870770C000000023F400000000000017400076261636B656E647874000662656172657274002432396266363833332D333366352D343564322D626331342D333734653639353562303465, &#39;90b3214b0490f63a567bfc9bc718af2a&#39;, &#39;admin&#39;, &#39;client&#39;, _binary 0xACED0005737200416F72672E737072696E676672616D65776F726B2E73656375726974792E6F61757468322E70726F76696465722E4F417574683241757468656E7469636174696F6EBD400B02166252130200024C000D73746F7265645265717565737474003C4C6F72672F737072696E676672616D65776F726B2F73656375726974792F6F61757468322F70726F76696465722F4F4175746832526571756573743B4C00127573657241757468656E7469636174696F6E7400324C6F72672F737072696E676672616D65776F726B2F73656375726974792F636F72652F41757468656E7469636174696F6E3B787200476F72672E737072696E676672616D65776F726B2E73656375726974792E61757468656E7469636174696F6E2E416273747261637441757468656E7469636174696F6E546F6B656ED3AA287E6E47640E0200035A000D61757468656E746963617465644C000B617574686F7269746965737400164C6A6176612F7574696C2F436F6C6C656374696F6E3B4C000764657461696C737400124C6A6176612F6C616E672F4F626A6563743B787000737200266A6176612E7574696C2E436F6C6C656374696F6E7324556E6D6F6469666961626C654C6973743F2531B5EC3F0200014C00046C6973747400104C6A6176612F7574696C2F4C6973743B7872002C6A6176612E7574696C2E436F6C6C656374696F6E7324556E6D6F6469666961626C65436F6C6C656374696F6E19420080CB5E3F0200014C00016371007E00047870737200136A6176612E7574696C2E41727261794C6973747881D21D99C7613F000149000473697A65787000000001770400000001737200426F72672E737072696E676672616D65776F726B2E73656375726974792E636F72652E617574686F726974792E53696D706C654772616E746564417574686F72697479000000000000013F00014C0004726F6C657400124C6A6176612F6C616E672F537472696E673B7870740004555345527871007E000C707372003A6F72672E737072696E676672616D65776F726B2E73656375726974792E6F61757468322E70726F76696465722E4F41757468325265717565737400000000000000010200075A0008617070726F7665644C000B617574686F72697469657371007E00044C000A657874656E73696F6E7374000F4C6A6176612F7574696C2F4D61703B4C000B726564697265637455726971007E000E4C00077265667265736874003B4C6F72672F737072696E676672616D65776F726B2F73656375726974792F6F61757468322F70726F76696465722F546F6B656E526571756573743B4C000B7265736F7572636549647374000F4C6A6176612F7574696C2F5365743B4C000D726573706F6E7365547970657371007E0014787200386F72672E737072696E676672616D65776F726B2E73656375726974792E6F61757468322E70726F76696465722E426173655265717565737436287A3EA371693F00034C0008636C69656E74496471007E000E4C001172657175657374506172616D657465727371007E00124C000573636F706571007E00147870740006636C69656E74737200256A6176612E7574696C2E436F6C6C656374696F6E7324556E6D6F6469666961626C654D6170F1A5A8FE743F420200014C00016D71007E00127870737200116A6176612E7574696C2E486173684D61700507DAC13F603F000246000A6C6F6164466163746F724900097468726573686F6C6478703F400000000000067708000000080000000374000A6772616E745F7479706574000870617373776F7264740009636C69656E745F6964740006636C69656E74740008757365726E616D6574000561646D696E78737200256A6176612E7574696C2E436F6C6C656374696F6E7324556E6D6F6469666961626C65536574801D92D18F9B80550200007871007E0009737200176A6176612E7574696C2E4C696E6B656448617368536574D86CD75A95DD2A1E020000787200116A6176612E7574696C2E48617368536574BA44859596B83F0300007870770C000000103F400000000000017400076261636B656E6478017371007E0025770C000000103F40000000000000787371007E001A3F40000000000000770800000010000000007870707371007E0025770C000000103F400000000000017400116261636B656E642D7265736F7572636573787371007E0025770C000000103F40000000000000787372004F6F72672E737072696E676672616D65776F726B2E73656375726974792E61757468656E7469636174696F6E2E557365726E616D6550617373776F726441757468656E7469636174696F6E546F6B656E000000000000013F00024C000B63726564656E7469616C7371007E00054C00097072696E636970616C71007E00057871007E0003017371007E00077371007E000B0000000177040000000171007E000F7871007E0030737200176A6176612E7574696C2E4C696E6B6564486173684D617034C04E5C106CC0FB0200015A000B6163636573734F726465727871007E001A3F400000000000067708000000080000000474000D636C69656E745F73656372657474000673656372657471007E001C71007E001D71007E001E71007E001F71007E002071007E0021780070737200326F72672E737072696E676672616D65776F726B2E73656375726974792E636F72652E7573657264657461696C732E55736572000000000000013F00075A00116163636F756E744E6F6E457870697265645A00106163636F756E744E6F6E4C6F636B65645A001563726564656E7469616C734E6F6E457870697265645A0007656E61626C65644C000B617574686F72697469657371007E00144C000870617373776F726471007E000E4C0008757365726E616D6571007E000E7870010101017371007E0022737200116A6176612E7574696C2E54726565536574DD98509395ED875B0300007870737200466F72672E737072696E676672616D65776F726B2E73656375726974792E636F72652E7573657264657461696C732E5573657224417574686F72697479436F6D70617261746F72000000000000013F0000787077040000000171007E000F787074000561646D696E, &#39;c483a862b79325f0f77a0a6c84e99ec2&#39;);
+/*!40000 ALTER TABLE `oauth_access_token` ENABLE KEYS */;
+
+-- 导出  表 night.oauth_approvals 结构
+CREATE TABLE IF NOT EXISTS `oauth_approvals` (
+  `userId` varchar(256) DEFAULT NULL,
+  `clientId` varchar(256) DEFAULT NULL,
+  `scope` varchar(256) DEFAULT NULL,
+  `status` varchar(10) DEFAULT NULL,
+  `expiresAt` timestamp NULL DEFAULT NULL,
+  `lastModifiedAt` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- 正在导出表  night.oauth_approvals 的数据：~0 rows (大约)
+/*!40000 ALTER TABLE `oauth_approvals` DISABLE KEYS */;
+/*!40000 ALTER TABLE `oauth_approvals` ENABLE KEYS */;
+
+-- 导出  表 night.oauth_client_details 结构
+CREATE TABLE IF NOT EXISTS `oauth_client_details` (
+  `client_id` varchar(128) NOT NULL,
+  `resource_ids` varchar(256) DEFAULT NULL,
+  `client_secret` varchar(256) DEFAULT NULL,
+  `scope` varchar(256) DEFAULT NULL,
+  `authorized_grant_types` varchar(256) DEFAULT NULL,
+  `web_server_redirect_uri` varchar(256) DEFAULT NULL,
+  `authorities` varchar(256) DEFAULT NULL,
+  `access_token_validity` int(11) DEFAULT NULL,
+  `refresh_token_validity` int(11) DEFAULT NULL,
+  `additional_information` varchar(4096) DEFAULT NULL,
+  `autoapprove` varchar(256) DEFAULT NULL,
+  PRIMARY KEY (`client_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- 正在导出表  night.oauth_client_details 的数据：~1 rows (大约)
+/*!40000 ALTER TABLE `oauth_client_details` DISABLE KEYS */;
+REPLACE INTO `oauth_client_details` (`client_id`, `resource_ids`, `client_secret`, `scope`, `authorized_grant_types`, `web_server_redirect_uri`, `authorities`, `access_token_validity`, `refresh_token_validity`, `additional_information`, `autoapprove`) VALUES
+    (&#39;client&#39;, &#39;backend-resources&#39;, &#39;$2a$10$qdmHW9.s8biV8vqLJKu.Juh.Kxm8WPqHCAs7ja1XtG2AM.EDKKBge&#39;, &#39;backend&#39;, &#39;password,refresh_token&#39;, &#39;&#39;, NULL, 864000, 864000, NULL, NULL);
+/*!40000 ALTER TABLE `oauth_client_details` ENABLE KEYS */;
+
+-- 导出  表 night.oauth_client_token 结构
+CREATE TABLE IF NOT EXISTS `oauth_client_token` (
+  `token_id` varchar(256) DEFAULT NULL,
+  `token` blob DEFAULT NULL,
+  `authentication_id` varchar(128) NOT NULL,
+  `user_name` varchar(256) DEFAULT NULL,
+  `client_id` varchar(256) DEFAULT NULL,
+  PRIMARY KEY (`authentication_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- 正在导出表  night.oauth_client_token 的数据：~0 rows (大约)
+/*!40000 ALTER TABLE `oauth_client_token` DISABLE KEYS */;
+/*!40000 ALTER TABLE `oauth_client_token` ENABLE KEYS */;
+
+-- 导出  表 night.oauth_code 结构
+CREATE TABLE IF NOT EXISTS `oauth_code` (
+  `code` varchar(256) DEFAULT NULL,
+  `authentication` blob DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- 正在导出表  night.oauth_code 的数据：~0 rows (大约)
+/*!40000 ALTER TABLE `oauth_code` DISABLE KEYS */;
+/*!40000 ALTER TABLE `oauth_code` ENABLE KEYS */;
+
+-- 导出  表 night.oauth_refresh_token 结构
+CREATE TABLE IF NOT EXISTS `oauth_refresh_token` (
+  `token_id` varchar(256) DEFAULT NULL,
+  `token` blob DEFAULT NULL,
+  `authentication` blob DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- 正在导出表  night.oauth_refresh_token 的数据：~0 rows (大约)
+/*!40000 ALTER TABLE `oauth_refresh_token` DISABLE KEYS */;
+REPLACE INTO `oauth_refresh_token` (`token_id`, `token`, `authentication`) VALUES
+    (&#39;c483a862b79325f0f77a0a6c84e99ec2&#39;, _binary 0xACED00057372004C6F72672E737072696E676672616D65776F726B2E73656375726974792E6F61757468322E636F6D6D6F6E2E44656661756C744578706972696E674F417574683252656672657368546F6B656E2FDF47639DD0C9B70200014C000A65787069726174696F6E7400104C6A6176612F7574696C2F446174653B787200446F72672E737072696E676672616D65776F726B2E73656375726974792E6F61757468322E636F6D6D6F6E2E44656661756C744F417574683252656672657368546F6B656E733F0A6354D45E0200014C000576616C75657400124C6A6176612F6C616E672F537472696E673B787074002431633138383361652D633335322D343138382D613936312D3833366430333664303962337372000E6A6176612E7574696C2E44617465686A3F4B597419030000787077080000016E91E67F6A78, _binary 0xACED0005737200416F72672E737072696E676672616D65776F726B2E73656375726974792E6F61757468322E70726F76696465722E4F417574683241757468656E7469636174696F6EBD400B02166252130200024C000D73746F7265645265717565737474003C4C6F72672F737072696E676672616D65776F726B2F73656375726974792F6F61757468322F70726F76696465722F4F4175746832526571756573743B4C00127573657241757468656E7469636174696F6E7400324C6F72672F737072696E676672616D65776F726B2F73656375726974792F636F72652F41757468656E7469636174696F6E3B787200476F72672E737072696E676672616D65776F726B2E73656375726974792E61757468656E7469636174696F6E2E416273747261637441757468656E7469636174696F6E546F6B656ED3AA287E6E47640E0200035A000D61757468656E746963617465644C000B617574686F7269746965737400164C6A6176612F7574696C2F436F6C6C656374696F6E3B4C000764657461696C737400124C6A6176612F6C616E672F4F626A6563743B787000737200266A6176612E7574696C2E436F6C6C656374696F6E7324556E6D6F6469666961626C654C6973743F2531B5EC3F0200014C00046C6973747400104C6A6176612F7574696C2F4C6973743B7872002C6A6176612E7574696C2E436F6C6C656374696F6E7324556E6D6F6469666961626C65436F6C6C656374696F6E19420080CB5E3F0200014C00016371007E00047870737200136A6176612E7574696C2E41727261794C6973747881D21D99C7613F000149000473697A65787000000001770400000001737200426F72672E737072696E676672616D65776F726B2E73656375726974792E636F72652E617574686F726974792E53696D706C654772616E746564417574686F72697479000000000000013F00014C0004726F6C657400124C6A6176612F6C616E672F537472696E673B7870740004555345527871007E000C707372003A6F72672E737072696E676672616D65776F726B2E73656375726974792E6F61757468322E70726F76696465722E4F41757468325265717565737400000000000000010200075A0008617070726F7665644C000B617574686F72697469657371007E00044C000A657874656E73696F6E7374000F4C6A6176612F7574696C2F4D61703B4C000B726564697265637455726971007E000E4C00077265667265736874003B4C6F72672F737072696E676672616D65776F726B2F73656375726974792F6F61757468322F70726F76696465722F546F6B656E526571756573743B4C000B7265736F7572636549647374000F4C6A6176612F7574696C2F5365743B4C000D726573706F6E7365547970657371007E0014787200386F72672E737072696E676672616D65776F726B2E73656375726974792E6F61757468322E70726F76696465722E426173655265717565737436287A3EA371693F00034C0008636C69656E74496471007E000E4C001172657175657374506172616D657465727371007E00124C000573636F706571007E00147870740006636C69656E74737200256A6176612E7574696C2E436F6C6C656374696F6E7324556E6D6F6469666961626C654D6170F1A5A8FE743F420200014C00016D71007E00127870737200116A6176612E7574696C2E486173684D61700507DAC13F603F000246000A6C6F6164466163746F724900097468726573686F6C6478703F400000000000067708000000080000000374000A6772616E745F7479706574000870617373776F7264740009636C69656E745F6964740006636C69656E74740008757365726E616D6574000561646D696E78737200256A6176612E7574696C2E436F6C6C656374696F6E7324556E6D6F6469666961626C65536574801D92D18F9B80550200007871007E0009737200176A6176612E7574696C2E4C696E6B656448617368536574D86CD75A95DD2A1E020000787200116A6176612E7574696C2E48617368536574BA44859596B83F0300007870770C000000103F400000000000017400076261636B656E6478017371007E0025770C000000103F40000000000000787371007E001A3F40000000000000770800000010000000007870707371007E0025770C000000103F400000000000017400116261636B656E642D7265736F7572636573787371007E0025770C000000103F40000000000000787372004F6F72672E737072696E676672616D65776F726B2E73656375726974792E61757468656E7469636174696F6E2E557365726E616D6550617373776F726441757468656E7469636174696F6E546F6B656E000000000000013F00024C000B63726564656E7469616C7371007E00054C00097072696E636970616C71007E00057871007E0003017371007E00077371007E000B0000000177040000000171007E000F7871007E0030737200176A6176612E7574696C2E4C696E6B6564486173684D617034C04E5C106CC0FB0200015A000B6163636573734F726465727871007E001A3F400000000000067708000000080000000474000D636C69656E745F73656372657474000673656372657471007E001C71007E001D71007E001E71007E001F71007E002071007E0021780070737200326F72672E737072696E676672616D65776F726B2E73656375726974792E636F72652E7573657264657461696C732E55736572000000000000013F00075A00116163636F756E744E6F6E457870697265645A00106163636F756E744E6F6E4C6F636B65645A001563726564656E7469616C734E6F6E457870697265645A0007656E61626C65644C000B617574686F72697469657371007E00144C000870617373776F726471007E000E4C0008757365726E616D6571007E000E7870010101017371007E0022737200116A6176612E7574696C2E54726565536574DD98509395ED875B0300007870737200466F72672E737072696E676672616D65776F726B2E73656375726974792E636F72652E7573657264657461696C732E5573657224417574686F72697479436F6D70617261746F72000000000000013F0000787077040000000171007E000F787074000561646D696E);
+/*!40000 ALTER TABLE `oauth_refresh_token` ENABLE KEYS */;
+
+-- 导出  表 night.tb_permission 结构
+CREATE TABLE IF NOT EXISTS `tb_permission` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `parent_id` bigint(20) DEFAULT NULL COMMENT &#39;父权限&#39;,
+  `name` varchar(64) NOT NULL COMMENT &#39;权限名称&#39;,
+  `enname` varchar(64) NOT NULL COMMENT &#39;权限英文名称&#39;,
+  `url` varchar(255) NOT NULL COMMENT &#39;授权路径&#39;,
+  `description` varchar(200) DEFAULT NULL COMMENT &#39;备注&#39;,
+  `created` datetime NOT NULL,
+  `updated` datetime NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=37 DEFAULT CHARSET=utf8 COMMENT=&#39;权限表&#39;;
+
+-- 正在导出表  night.tb_permission 的数据：~4 rows (大约)
+/*!40000 ALTER TABLE `tb_permission` DISABLE KEYS */;
+REPLACE INTO `tb_permission` (`id`, `parent_id`, `name`, `enname`, `url`, `description`, `created`, `updated`) VALUES
+    (1, 0, &#39;系统管理&#39;, &#39;SYstem&#39;, &#39;/&#39;, NULL, &#39;2019-09-24 15:47:03&#39;, &#39;2019-09-24 15:47:03&#39;),
+    (2, 1, &#39;内容管理&#39;, &#39;SystemContent&#39;, &#39;/contents&#39;, NULL, &#39;2019-09-24 15:47:35&#39;, &#39;2019-09-24 15:47:35&#39;),
+    (3, 2, &#39;查看内容&#39;, &#39;SystemContentView&#39;, &#39;/contents/view&#39;, NULL, &#39;2019-09-24 15:48:15&#39;, &#39;2019-09-24 15:48:17&#39;),
+    (4, 2, &#39;保存内容&#39;, &#39;SystemContentSave&#39;, &#39;/contents/save&#39;, NULL, &#39;2019-09-24 15:48:58&#39;, &#39;2019-09-24 15:49:00&#39;);
+/*!40000 ALTER TABLE `tb_permission` ENABLE KEYS */;
+
+-- 导出  表 night.tb_role 结构
+CREATE TABLE IF NOT EXISTS `tb_role` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `parent_id` bigint(20) DEFAULT NULL COMMENT &#39;父角色&#39;,
+  `name` varchar(64) NOT NULL COMMENT &#39;角色名称&#39;,
+  `enname` varchar(64) NOT NULL COMMENT &#39;角色英文名称&#39;,
+  `description` varchar(200) DEFAULT NULL COMMENT &#39;备注&#39;,
+  `created` datetime NOT NULL,
+  `updated` datetime NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=37 DEFAULT CHARSET=utf8 COMMENT=&#39;角色表&#39;;
+
+-- 正在导出表  night.tb_role 的数据：~0 rows (大约)
+/*!40000 ALTER TABLE `tb_role` DISABLE KEYS */;
+REPLACE INTO `tb_role` (`id`, `parent_id`, `name`, `enname`, `description`, `created`, `updated`) VALUES
+    (1, 0, &#39;超级管理员&#39;, &#39;admin&#39;, NULL, &#39;2019-09-24 15:45:41&#39;, &#39;2019-09-24 15:45:42&#39;);
+/*!40000 ALTER TABLE `tb_role` ENABLE KEYS */;
+
+-- 导出  表 night.tb_role_permission 结构
+CREATE TABLE IF NOT EXISTS `tb_role_permission` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `role_id` bigint(20) NOT NULL COMMENT &#39;角色 ID&#39;,
+  `permission_id` bigint(20) NOT NULL COMMENT &#39;权限 ID&#39;,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=37 DEFAULT CHARSET=utf8 COMMENT=&#39;角色权限表&#39;;
+
+-- 正在导出表  night.tb_role_permission 的数据：~4 rows (大约)
+/*!40000 ALTER TABLE `tb_role_permission` DISABLE KEYS */;
+REPLACE INTO `tb_role_permission` (`id`, `role_id`, `permission_id`) VALUES
+    (1, 1, 1),
+    (2, 1, 2),
+    (3, 1, 3),
+    (4, 1, 4);
+/*!40000 ALTER TABLE `tb_role_permission` ENABLE KEYS */;
+
+-- 导出  表 night.tb_user 结构
+CREATE TABLE IF NOT EXISTS `tb_user` (
+  `id` varchar(50) NOT NULL,
+  `username` varchar(50) NOT NULL COMMENT &#39;用户名&#39;,
+  `password` varchar(64) NOT NULL COMMENT &#39;密码，加密存储&#39;,
+  `phone` varchar(20) DEFAULT NULL COMMENT &#39;注册手机号&#39;,
+  `email` varchar(50) DEFAULT NULL COMMENT &#39;注册邮箱&#39;,
+  `created` datetime NOT NULL COMMENT &#39;注册时间&#39;,
+  `updated` datetime NOT NULL COMMENT &#39;更新时间&#39;,
+  `icon` longtext DEFAULT NULL COMMENT &#39;头像&#39;,
+  `wxopenid` varchar(50) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `username` (`username`) USING BTREE,
+  UNIQUE KEY `phone` (`phone`) USING BTREE,
+  UNIQUE KEY `email` (`email`) USING BTREE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT=&#39;用户表&#39;;
+
+-- 正在导出表  night.tb_user 的数据：~1 rows (大约)
+/*!40000 ALTER TABLE `tb_user` DISABLE KEYS */;
+REPLACE INTO `tb_user` (`id`, `username`, `password`, `phone`, `email`, `created`, `updated`, `icon`, `wxopenid`) VALUES
+    (&#39;2fa3cf0c1e0643c1b9ca678c883a20eb&#39;, &#39;admin&#39;, &#39;$2a$10$NNgbu7kuBngEACGk2XdD0umqllx9ECn1CNfX4m.Tq6lvGisz7Jjd6&#39;, NULL, NULL, &#39;2019-11-11 13:08:24&#39;, &#39;2019-11-11 13:08:24&#39;, &#39;http://hostest.oss-cn-beijing.aliyuncs.com/2a5a0a36-1947-4955-8368-51bb95580632.png&#39;, NULL);
+/*!40000 ALTER TABLE `tb_user` ENABLE KEYS */;
+
+-- 导出  表 night.tb_user_role 结构
+CREATE TABLE IF NOT EXISTS `tb_user_role` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `user_id` bigint(20) NOT NULL COMMENT &#39;用户 ID&#39;,
+  `role_id` bigint(20) NOT NULL COMMENT &#39;角色 ID&#39;,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=37 DEFAULT CHARSET=utf8 COMMENT=&#39;用户角色表&#39;;
+
+-- 正在导出表  night.tb_user_role 的数据：~0 rows (大约)
+/*!40000 ALTER TABLE `tb_user_role` DISABLE KEYS */;
+REPLACE INTO `tb_user_role` (`id`, `user_id`, `role_id`) VALUES
+    (1, 1, 1);
+/*!40000 ALTER TABLE `tb_user_role` ENABLE KEYS */;
+
+/*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, &#39;&#39;) */;
+/*!40014 SET FOREIGN_KEY_CHECKS=IF(@OLD_FOREIGN_KEY_CHECKS IS NULL, 1, @OLD_FOREIGN_KEY_CHECKS) */;
+/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
+</code></pre>
+<h2 id="数据库配置"><a href="#数据库配置" class="headerlink" title="数据库配置"></a>数据库配置</h2><p><img src="https://i.loli.net/2019/11/12/zxCLZQ7mH6IKp8d.png" srcset="/img/loading.gif" alt=""></p>
+<h3 id="测试"><a href="#测试" class="headerlink" title="测试"></a>测试</h3><p><img src="https://i.loli.net/2019/11/12/B9DWnXi3FZrQ1bw.png" srcset="/img/loading.gif" alt=""></p>
+
+            <hr>
+          </div>
+          <br>
+          <div>
+            
+              <p>
+                <i class="iconfont icon-inbox"></i>
+                
+                  <a class="hover-with-bg" href="/categories/JAVA">JAVA</a>
+                  &nbsp;
+                
+              </p>
+            
+            <p>
+              <i class="iconfont icon-tag"></i>
+              
+              <span id="/2019/11/12/JDBC认证服务配置/" class="visitors leancloud_visitors" data-flag-title="JDBC认证服务配置">
+                <em id="visitors-text" class="post-meta-item-text"></em>
+                <i id="visitors-count"></i>
+              </span>
+            </p>
+            
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="d-none d-lg-block col-lg-2 toc-container">
+      
+  <div id="toc">
+    <p class="h4"><i class="far fa-list-alt"></i>&nbsp;目录</p>
+    <div id="tocbot"></div>
+  </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- custom -->
+
+
+<!-- Comments -->
+<div class="col-lg-7 mx-auto nopadding-md">
+  <div class="container comments mx-auto" id="comments">
+    
+  </div>
+</div>
+
+    
+  </main>
+
+  
+    <a class="z-depth-1" id="scroll-top-button" href="#" role="button">
+      <i class="fa fa-chevron-up scroll-top-arrow" aria-hidden="true"></i>
+    </a>
+  
+
+  
+    <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v"
+                 for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+  
+
+  <footer class="mt-5">
+  <div class="text-center py-3">
+<!--    <a href="#" target="_blank" rel="nofollow noopener"><b></b></a>-->
+<!--    <i class="iconfont icon-love"></i>-->
+<!--    <a href="#" target="_blank" rel="nofollow noopener"> <b>qy</b></a>-->
+    <br>
+    
+  </div>
+</footer>
+
+<!-- SCRIPTS -->
+<script src="/lib/jquery/jquery.min.js" ></script>
+<script src="/lib/popper/popper.min.js" ></script>
+<script src="/lib/bootstrap/js/bootstrap.min.js" ></script>
+<script src="/lib/mdbootstrap/js/mdb.min.js" ></script>
+<script src="/js/main.js" ></script>
+
+
+  <script src="/js/lazyload.js" ></script>
+
+
+  
+    <script src="/lib/tocbot/tocbot.min.js" ></script>
+  
+  <script src="/js/post.js" ></script>
+
+
+  <script src="/lib/prettify/prettify.min.js" ></script>
+  <script>
+    $(document).ready(function () {
+      $('pre').addClass('prettyprint  linenums');
+      prettyPrint();
+    })
+  </script>
+
+
+
+
+
+  <script src="/lib/anchor/anchor.min.js" ></script>
+  <script>
+    anchors.options = {
+      placement: "right",
+      visible: "false",
+      
+    };
+    var el = "h1,h2,h3,h4,h5,h6".split(",");
+    var res = [];
+    for (item of el) {
+      res.push(".markdown-body > " + item)
+    }
+    anchors.add(res.join(", "))
+  </script>
+
+
+
+  <script src="/js/local-search.js" ></script>
+  <script>
+    var path = "/local-search.xml";
+    var inputArea = document.querySelector("#local-search-input");
+    inputArea.onclick = function () {
+      getSearchFile(path);
+      this.onclick = null
+    }
+  </script>
+
+
+
+  <script src="/lib/fancybox/jquery.fancybox.min.js" ></script>
+  <script>
+    $('#post').find('img').each(
+      function () {
+        var _this = $(this);
+        var _src = _this.attr("src");
+        _this.wrap('<a data-fancybox="images" href="' + _src + '" ></a>');
+      }
+    );
+  </script>
+
+
+
+  <script src="/lib/smooth-scroll/smooth-scroll.min.js" ></script>
+
+
+
+
+</body>
+</html>
