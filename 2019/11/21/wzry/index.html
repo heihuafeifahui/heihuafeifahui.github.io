@@ -15,7 +15,7 @@
   <meta name="description" content="">
   <meta name="author" content="PZI">
   <meta name="keywords" content="">
-  <title>归档 ~ Rng</title>
+  <title>WZRY笔记 ~ Rng</title>
 
   <link rel="stylesheet" href="/lib/font-awesome/css/all.min.css"  >
 <link rel="stylesheet" href="/lib/bootstrap/css/bootstrap.min.css"  >
@@ -107,6 +107,9 @@
             </span>
 
             
+              <br>
+              <p class="mt-3">星期四, 十一月 21日 2019, 11:20 上午</p>
+            
           </div>
 
           
@@ -117,59 +120,91 @@
 
   <main>
     
-      <div class="container nopadding-md">
-        <div class="py-5 z-depth-3" id="board">
-          
-          <div class="container">
-            <div class="row">
-              <div class="col-12 col-md-10 m-auto">
+      
+
+<div class="container-fluid">
+  <div class="row">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-md">
+      <div class="py-5 z-depth-3" id="board">
+        <div class="post-content mx-auto" id="post">
+          <div class="markdown-body">
+            <h1 id="WZRY"><a href="#WZRY" class="headerlink" title="WZRY"></a>WZRY</h1><h2 id="初始化项目"><a href="#初始化项目" class="headerlink" title="初始化项目"></a>初始化项目</h2><ul>
+<li>创建vue客户端</li>
+</ul>
+<pre><code class="vue">vue create admin
+vue create web</code></pre>
+<ul>
+<li>创建服务端</li>
+</ul>
+<pre><code>mkdir server
+npm init -y</code></pre><h2 id="server"><a href="#server" class="headerlink" title="server"></a>server</h2><ul>
+<li>修改package.json，添加启动方式,</li>
+</ul>
+<pre><code>{
+  &quot;name&quot;: &quot;server&quot;,
+  &quot;version&quot;: &quot;1.0.0&quot;,
+  &quot;description&quot;: &quot;&quot;,
+  &quot;main&quot;: &quot;index.js&quot;,
+  &quot;scripts&quot;: {
+    &quot;server&quot;: &quot;nodemon index.js&quot;,
+    &quot;test&quot;: &quot;echo \&quot;Error: no test specified\&quot; &amp;&amp; exit 1&quot;
+  },
+  &quot;keywords&quot;: [],
+  &quot;author&quot;: &quot;&quot;,
+  &quot;license&quot;: &quot;ISC&quot;
+}
+</code></pre><ul>
+<li>运行时使用</li>
+</ul>
+<pre><code>npm run server</code></pre>
+            <hr>
+          </div>
+          <br>
+          <div>
+            
+              <p>
+                <i class="iconfont icon-inbox"></i>
                 
-
-<div class="list-group">
-  <p class="h4">共计 12 篇文章</p>
-  <hr>
-  
-    
-      
-      <p class="h5">2019</p>
-    
-    <a href="/2019/10/02/IDEA%E6%8F%92%E4%BB%B6SaveActions/" class="list-group-item list-group-item-action">
-      <span class="archive-post-title">IDEA插件SaveActions</span>
-      <span style="float: right;">10-02</span>
-    </a>
-  
-    
-    <a href="/2019/05/10/Express%E7%AC%94%E8%AE%B0(1)/" class="list-group-item list-group-item-action">
-      <span class="archive-post-title">Express笔记(1)</span>
-      <span style="float: right;">05-10</span>
-    </a>
-  
-    
-    <a href="/2019/05/10/%E5%9F%BA%E4%BA%8EReids%E5%AD%98%E5%82%A8%E4%BB%A4%E7%89%8C/" class="list-group-item list-group-item-action">
-      <span class="archive-post-title">Express笔记(1)</span>
-      <span style="float: right;">05-10</span>
-    </a>
-  
-</div>
-
-  <nav aria-label="index posts navigation">
-    <ul class="pagination pg-blue justify-content-center mt-5">
-      
-      
-        <li class="page-item">
-          <a class="page-link" href="/archives/2019/#board">上一页</a>
-        </li>
-      
-      
-    </ul>
-  </nav>
-
-
-              </div>
-            </div>
+                  <a class="hover-with-bg" href="/categories/node">node</a>
+                  &nbsp;
+                
+              </p>
+            
+            <p>
+              <i class="iconfont icon-tag"></i>
+              
+              <span id="/2019/11/21/wzry/" class="visitors leancloud_visitors" data-flag-title="WZRY笔记">
+                <em id="visitors-text" class="post-meta-item-text"></em>
+                <i id="visitors-count"></i>
+              </span>
+            </p>
+            
           </div>
         </div>
       </div>
+    </div>
+    <div class="d-none d-lg-block col-lg-2 toc-container">
+      
+  <div id="toc">
+    <p class="h4"><i class="far fa-list-alt"></i>&nbsp;目录</p>
+    <div id="tocbot"></div>
+  </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- custom -->
+
+
+<!-- Comments -->
+<div class="col-lg-7 mx-auto nopadding-md">
+  <div class="container comments mx-auto" id="comments">
+    
+  </div>
+</div>
+
     
   </main>
 
@@ -223,6 +258,11 @@
 
   <script src="/js/lazyload.js" ></script>
 
+
+  
+    <script src="/lib/tocbot/tocbot.min.js" ></script>
+  
+  <script src="/js/post.js" ></script>
 
 
   <script src="/lib/prettify/prettify.min.js" ></script>
